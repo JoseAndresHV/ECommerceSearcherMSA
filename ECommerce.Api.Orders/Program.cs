@@ -1,11 +1,24 @@
+using ECommerce.Api.Orders.Db;
+using ECommerce.Api.Orders.Interfaces;
+using ECommerce.Api.Orders.Providers;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var services = builder.Services;
 
-builder.Services.AddControllers();
+services.AddDbContext<OrdersDbContext>(options =>
+    options.UseInMemoryDatabase("Orders"));
+
+services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+services.AddScoped<IOrdersProvider, OrdersProvider>();
+
+services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
 var app = builder.Build();
 
