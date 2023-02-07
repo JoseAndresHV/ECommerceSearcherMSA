@@ -1,5 +1,6 @@
 using ECommerce.Api.Search.Interfaces;
 using ECommerce.Api.Search.Services;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ services.AddHttpClient("OrdersService", config =>
 services.AddHttpClient("ProductsService", config =>
 {
     config.BaseAddress = new Uri(builder.Configuration["Services:Products"]!);
-});
+}).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500)));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

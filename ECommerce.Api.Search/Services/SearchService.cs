@@ -18,14 +18,15 @@ public class SearchService : ISearchService
         var ordersResult = await _ordersService.GetOrderAsync(customer);
         var productsResult = await _productsService.GetProductsAsync();
 
-        if (ordersResult.isSuccess && productsResult.isSuccess)
+        if (ordersResult.isSuccess)
         {
             foreach (var order in ordersResult.orders!)
             {
                 foreach (var item in order.OrderItems)
                 {
-                    item.ProductName = productsResult.products!.FirstOrDefault(p => p.Id == item.ProductId)!.Name;
-
+                    item.ProductName = productsResult.isSuccess ?
+                        productsResult.products!.FirstOrDefault(p => p.Id == item.ProductId)!.Name :
+                        "Product information is not available";
                 }
             }
 
