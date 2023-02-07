@@ -10,10 +10,16 @@ var services = builder.Services;
 services.AddScoped<ISearchService, SearchService>();
 services.AddScoped<IOrdersService, OrdersService>();
 services.AddScoped<IProductsService, ProductsService>();
+services.AddScoped<ICustomersService, CustomersServices>();
 
 services.AddHttpClient("OrdersService", config =>
 {
     config.BaseAddress = new Uri(builder.Configuration["Services:Orders"]!);
+});
+
+services.AddHttpClient("CustomersService", config =>
+{
+    config.BaseAddress = new Uri(builder.Configuration["Services:Customers"]!);
 });
 
 services.AddHttpClient("ProductsService", config =>
